@@ -1,0 +1,67 @@
+HOW TO RUN THE SERVER: 
+1. Go to Google cloud VM instance
+- Google Cloud -> Compute Engine -> VM instances
+2. Go to SSH console for "portfoliowebsite"
+3. Run the manage.py file:
+- Use the command: "cd PortfolioWebsite; cd Website; nohup sudo python3 manage.py runsslserver 0.0.0.0:443 &"
+Explanation:
+cd: moves into a folder
+nohup: Runs the command "sudo python3 manage.py runsslserver 0.0.0.0:443" even when the terminal is closed
+sudo: Forces a command to run, regardless of permissions
+python3: package used to run everything
+manage.py: The main file running the html/css/javascript files
+runsslserver: runs the server using "https"
+0.0.0.0:443 : the 443 means https (80 would mean http)
+
+HOW TO UPDATE WEBSITE:
+1. Go to "GitHub Desktop"
+2. Go to the "PortfolioWebsite" repository (top left)
+3. Click "Commit to main" bottom left
+4. Click "Push origin" to make my local files into the official files of the repository
+5. Go to Google cloud VM instance
+- Google Cloud -> Compute Engine -> VM instances
+6. Go to SSH console for "portfoliowebsite"
+7. Pull the new files from Github
+- type "cd PortfolioWebsite" to go into the directory
+- type "git pull" into the SSH console to update the folders
+
+
+HOW TO RENEW CERTIFICATE:
+Got certificate from zeroSSL (website)
+1. go to: https://app.zerossl.com/certificate/new
+2. Enter the domain "tipucs.co.uk"
+3. Pick 90 day certificate
+4. After clicking "next" twice, move onto verifying that I own the domain
+5. The verification method im using is DNS (CNAME)
+- Go to google domains
+- Click "manage" on tipucs.co.uk
+- Go to DNS
+- Manage custom records
+- Create new record
+- paste the "Name" from zerossl to "Host name" on google domains. KEEP IN MIND, DO NOT INCLUDE THE "tipucs.co.uk" AT THE END OF "Name" BECAUSE ITS AUTOMATICALLY ENTERED
+- Change "Type" to CNAME 
+- paste the "Point To" from zerossl to "Data" on google domains
+- Click save on google domains
+- On zeroSSL, click "Next" then "Veryify Domain" This should be 5-10 seconds max. If you get an error, then you probably forgot to remove "tipucs.co.uk" from end of "Name"
+- Download the ZIP of the certificate
+- Place new certificates into the PortfolioWebsite/Website Folder (can be anywhere but you must find the certificates in the SSH console later)
+6. Update the VM instance's folders into my local folders
+- Refer to "HOW TO UPDATE WEBSITE" to add new certificates to the files
+6. Go to Google cloud VM instance
+- Google Cloud -> Compute Engine -> VM instances
+7. Open the SSH console for "portfoliowebsite"
+8. Move the new certificates from "PortfolioWebsite/Website" to "/usr/local/lib/python3.9/dist-packages/sslserver/certs/"
+- go to "PortfolioWebsite/Website" with command: "cd PortfolioWebsite/Website"
+- type "dir" to see the folders/files in this folder
+- move the certificate.crt to "/usr/local/lib/python3.9/dist-packages/sslserver/certs/" using command: "sudo mv certificate.crt /usr/local/lib/python3.9/dist-packages/sslserver/certs/"
+- move the private.key to "/usr/local/lib/python3.9/dist-packages/sslserver/certs/" using command: "sudo mv private.key /usr/local/lib/python3.9/dist-packages/sslserver/certs/"
+9. Change the name of the certificates
+- change "certificate.crt" to "development.crt" using command: "sudo mv certificate.crt development.crt"
+- change "private.key" to "development.key" using  command "sudo mv certificate.key development.key"
+
+
+
+Extra Info on the certificate:
+https://github.com/teddziuba/django-sslserver
+Essentially, what I did was make a valid certificate, then moved the certificate to the position of "runsslserver" certificate so that It would be used
+to check for validity when running the https server.

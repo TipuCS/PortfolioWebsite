@@ -1,17 +1,3 @@
-        // CURRENT TO DO:
-// Automatically find the distance value between nodes instead of manually entering them
-// ensure the g value is being correctly updated during each cycle
-// 
-
-// THIS IS THE NEWEST EDITION, LETS ASSUME I MADE THE NEW UPDATES (EVEN THOUGH I HAVEN'T, THIS IS FOR TESTING!)
-// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
-
-
 // ---------------------------------------------------------------------------------------------------------------------------------
 //                                                      SETUP
 // ---------------------------------------------------------------------------------------------------------------------------------
@@ -152,12 +138,44 @@ let offScreenCtx = offScreenCanvas.getContext('2d');
 //      IF USER PRESS D: MOVE TO NODE ON RIGHT
 //      IF USER PRESS S: TRY MOVING BACK (IF NO PREVIOUS NODES THEN DO NOTHING (MAYBE PLAY A SOUND ERROR))
 //      IF USER PRESS W: GO TO THIS NODE 
-// 
-// 
+
+
+class Timer{
+    constructor(incrementInMillisecond){
+        this.millisecond = 0;
+        this.second = 0;
+        this.cron;
+        // 100 milliseconds = 0.1 seconds meaning update every 0.1 seconds
+        // 1000 milliseconds = 1 fps
+        // 100 milliseconds = 10 fps
+        this.incrementInMillisecond = incrementInMillisecond;
+    }
+    timer(){
+        if ((this.millisecond += 100) == 1000) {
+            this.millisecond = 0;
+            this.second++;
+          }
+    }
+    startTimer(){
+        this.pause();
+        this.cron = setInterval(() => { this.timer(); }, this.incrementInMillisecond);
+    }
+    
+    pause(){
+        clearInterval(this.cron);
+    }
+
+    reset(){
+        this.millisecond = 0;
+        this.second = 0;
+    }
+}
+
 
 
 class AutoCar{
-    constructor(gameObj, route, carPng){
+    constructor(id, gameObj, route, carPng){
+        this.id = id;
         this.gameObj = gameObj;
         this.routeIdList = route;
         this.carPng = carPng;
@@ -170,14 +188,22 @@ class AutoCar{
         
         this.currentRouteId = 0;
         this.percentageComplete = 0;
-        this.speed = 50;
+        // pixels per second
+        this.speed = 188;
+
 
         this.completedAnimation = false;
+
+        this.timer = new Timer(50);
+        this.timerStarted = false;
+
+        this.millisecondAccounted = 0;
+
+        this.done = false;
 
     }
 
     update(){
-        // console.log("updating it");
         this.draw();
         this.play();
     }
@@ -185,15 +211,26 @@ class AutoCar{
     play(){
         // console.log("playing");
         if (!this.completedAnimation){
+            if (!this.timerStarted){
+                this.timer.startTimer();
+                this.timerStarted = true;
+            }
             // console.log("running function");
             this.animateMovement();
+        }
+        else{
+            if (!this.done){
+                console.log("COMPLETED THE ANIMATION");
+                this.timer.pause();
+                this.done = true;
+            }
         }
     }
 
     draw(){
         // console.log("drawing");
         if (!this.drewCar){
-            console.log("drew car was false, updating car");
+            // console.log("drew car was false, updating car");
             let firstNode = this.routeIdList[this.currentRouteId];
             let firstNodeX = gridCordToPixelCord(firstNode.x);
             let firstNodeY = gridCordToPixelCord(firstNode.y);
@@ -221,25 +258,37 @@ class AutoCar{
     }
 
     animateMovement(){
-        // console.log("current Node:", fromNode);
         let fromNode = this.routeIdList[this.currentRouteId];
-        console.log("current Node:", fromNode);
         let fromPosition = [gridCordToPixelCord(fromNode.x), gridCordToPixelCord(fromNode.y)];
-        // console.log("fromPosition:", fromPosition);
 
         let toNode = this.routeIdList[this.currentRouteId + 1];
-        console.log("next Node:", toNode);
         let toPosition = [gridCordToPixelCord(toNode.x), gridCordToPixelCord(toNode.y)];
-        // console.log("toPosition:", toPosition);
  
+
         let changeInX = toPosition[0] - fromPosition[0];
         let changeInY = toPosition[1] - fromPosition[1];
+
+        // console.log("start");
+
+        let totalMilliseconds = (this.timer.second * 1000) + this.timer.millisecond;
+        // console.log("total Milliseconds so far:", totalMilliseconds);
+        let millisecondToUpdate = totalMilliseconds - this.millisecondAccounted;
+        // console.log("new milliseconds to update for:", millisecondToUpdate);
+        this.millisecondAccounted = totalMilliseconds;
+
         let totalDistance = distanceBetweenPoints(fromPosition, toPosition);
-        let percentageIncrease = this.speed/totalDistance;
+
+        let numPixels = (millisecondToUpdate / 20) * this.speed;
+
+
+        let percentageIncrease = numPixels/totalDistance;
+        // console.log("increase in percentage from these pixels: ", percentageIncrease);
         let newPercentage = this.percentageComplete + percentageIncrease;
         let newX = ((newPercentage/100) * changeInX) + fromPosition[0];
         let newY = ((newPercentage/100) * changeInY) + fromPosition[1];
         this.percentageComplete = newPercentage;
+
+        // console.log("end");
         // console.log("percentage:", this.percentageComplete);
         this.x = newX;
         this.y = newY;
@@ -254,6 +303,7 @@ class AutoCar{
             }else{
                 this.currentRouteId += 1;
                 this.percentageComplete = 0;
+                
             }
         }
     }
@@ -267,9 +317,10 @@ class AutoCar{
 
 class Player{
     constructor(spawnNode, gameObj){
+        this.gameObj = gameObj;
+        this.atNode = spawnNode;
         this.x = 0;
         this.y = 0;
-        this.atNode = spawnNode;
         this.nextNode;
         this.angle = 0;
         this.drewCar = false;
@@ -277,13 +328,14 @@ class Player{
         this.width = 50;
         this.height = 20;
         this.layerToDraw = "foreground";
-        this.gameObj = gameObj;
 
         this.updatedOptions = false;
         this.options = [];
         this.selectedOptionIndex;
 
         this.animating = false;
+        // set to 100 for the users
+        this.speed = 300;
         this.percentageComplete = 0;
 
         this.updateCord(this.atNode);
@@ -293,6 +345,15 @@ class Player{
 
         this.finished = false;
         this.replicaCar;
+        this.algoCar;
+
+        this.timer = new Timer(20);
+
+        this.timerStarted = false;
+        this.millisecondAccounted = 0;
+
+
+
 
     }
 
@@ -311,18 +372,17 @@ class Player{
         this.draw();
 
         if (this.animating == false){
+            if (this.timerStarted){
+                this.timer.pause();
+                this.timerStarted = false;
+            }
             
 
             let endNode = this.gameObj.getEndNode();
             // if end Node is inside the list
             if (this.travelledNodeList.indexOf(endNode) != -1){
                 // completed the game
-                // start the animation stuff
-                // console.log("completed the shit");
-                // CONTINUE OR RETRY ROUTE
-                this.createReplicaAutoCar();
-                this.createPerfectAutoCar();
-                // console.log(this.gameObj.returnAlgoNodeList());
+                this.gameObj.stage = 2;
             }
 
             
@@ -342,19 +402,24 @@ class Player{
                 // console.log(this.selectedOptionIndex);
             }
         }else{
+            // start timer
+            if (!this.timerStarted){
+                this.timer.startTimer();
+                this.timerStarted = true;
+            }
             let atNodeX = gridCordToPixelCord(this.atNode.x);
             let atNodeY = gridCordToPixelCord(this.atNode.y);
             let toNodeX = gridCordToPixelCord(this.nextNode.x);
             let toNodeY = gridCordToPixelCord(this.nextNode.y);
             // console.log("at node:", this.atNode);
             // console.log("next node:", this.nextNode);
-            this.animateMovement([atNodeX, atNodeY], [toNodeX, toNodeY], 200);
+            this.animateMovement([atNodeX, atNodeY], [toNodeX, toNodeY]);
         }
     }
 
     createReplicaAutoCar(){
         if (this.replicaCar == null){
-            this.replicaCar = new AutoCar(this.gameObj, this.travelledNodeList, "playerCar.png");
+            this.replicaCar = new AutoCar(1, this.gameObj, this.travelledNodeList, "playerCar.png");
             addUpdateObjToCurrentScreen(this.replicaCar);
             console.log("creation");
         }
@@ -363,8 +428,9 @@ class Player{
     createPerfectAutoCar(){
         if (this.algoCar == null){
             let perfectNodeList = this.gameObj.returnAlgoNodeList();
-        this.algoCar = new AutoCar(this.gameObj, perfectNodeList, "playerCar.png");
-        addUpdateObjToCurrentScreen(this.algoCar);
+            this.algoCar = new AutoCar(2, this.gameObj, perfectNodeList, "playerCar.png");
+            addUpdateObjToCurrentScreen(this.algoCar);
+            console.log("creation");
         }
     }
 
@@ -453,11 +519,21 @@ class Player{
     }
 
     // speed is the pixels to move per cycle
-    animateMovement(fromPosition, toPosition, speed){
+    animateMovement(fromPosition, toPosition){
         let changeInX = toPosition[0] - fromPosition[0];
         let changeInY = toPosition[1] - fromPosition[1];
         let totalDistance = distanceBetweenPoints(fromPosition, toPosition);
-        let percentageIncrease = speed/totalDistance;
+
+        let totalMilliseconds = (this.timer.second * 1000) + this.timer.millisecond;
+        // console.log("total Milliseconds so far:", totalMilliseconds);
+        let millisecondToUpdate = totalMilliseconds - this.millisecondAccounted;
+        // console.log("new milliseconds to update for:", millisecondToUpdate);
+        this.millisecondAccounted = totalMilliseconds;
+
+        let numPixels = (millisecondToUpdate / 20) * this.speed;
+        // console.log("pixels to move forward:", numPixels)
+
+        let percentageIncrease = numPixels/totalDistance;
         let newPercentage = this.percentageComplete + percentageIncrease;
         let newX = ((newPercentage/100) * changeInX) + fromPosition[0];
         let newY = ((newPercentage/100) * changeInY) + fromPosition[1];
@@ -592,7 +668,7 @@ class MyImage{
     constructor(imageName, xCenter, yCenter, imageWidth, imageHeight){
         this.imageName = imageName;
         this.image = new Image();
-        this.image.src = "../static/imgs/" + this.imageName;
+        this.image.src = "Images/" + this.imageName;
         this.x = xCenter;
         this.y = yCenter;
 
@@ -654,29 +730,106 @@ class Game{
         this.pngList = [];
         this.resetGame = true;
 
-        this.playerPlaying = true;
         this.playerCar;
         this.finishLine;
         this.startLight;
 
+        // stage 1: player moving car to the end position
+        // stage 2: transition screen to Race The Star OR Exit
+        // stage 3: displaying the race
+        // stage 4: transition screen to Exit OR Play Again
+        this.stage = 1;
+        this.addedPopUpStage2 = false;
+        this.addedPopUpStage4 = false;
+
+    }
+
+    resetConstructor(){
+        this.nodeList = [];
+        this.heuristicMult = 1;
+        this.isMapComplete = false;
+        this.isSimulationComplete = false;
+        this.isHeuristicCalculated = false;
+        this.pngList = [];
+        this.resetGame = true;
+        this.playerCar = null;
+        this.finishLine = null;
+        this.startLight = null;
+        this.stage = 1;
+        this.addedPopUpStage2 = false;
+        this.addedPopUpStage4 = false;
     }
 
     update(){
-        if (this.isMapComplete){
 
-            if (this.resetGame){
-                this.removeAllPng();
+        // console.log(this);
 
-                this.createFinishLine();
-                this.createStartLight();
-                this.createCar();
-                this.nodeToDrawRoadFor = [];
-                this.nodeList.forEach((node) => {
-                    node.connectedPathId.forEach((id) => {
-                        this.createRoad(node, id);
+        if (this.stage == 1){
+            if (this.isMapComplete){
+
+                if (this.resetGame){
+                    this.removeAllPng();
+    
+                    this.createFinishLine();
+                    this.createStartLight();
+                    this.createCar();
+                    this.nodeToDrawRoadFor = [];
+                    this.nodeList.forEach((node) => {
+                        node.connectedPathId.forEach((id) => {
+                            this.createRoad(node, id);
+                        });
                     });
-                });
-                this.resetGame = false;
+                    // this.stage = 1;
+                    this.resetGame = false;
+                }
+            }
+        }
+        
+        if (this.stage == 2){
+            if (this.addedPopUpStage2 == false){
+                popUp1.addToCurrentScreen();   
+                this.addedPopUpStage2 = true;
+                // remove playerCar from update list
+                removeUpdateObjFromCurrentScreen(this.playerCar);
+            }
+        }
+        if (this.stage == 3){
+            this.playerCar.deleteCarPng(this.playerCar.carImage);
+            this.playerCar.createReplicaAutoCar();
+            this.playerCar.createPerfectAutoCar();
+            this.replicaAutoCar = this.playerCar.replicaCar;
+            this.perfectAutoCar = this.playerCar.algoCar;
+            // console.log(this.replicaAutoCar);
+            // console.log(this.perfectAutoCar);
+            if ((this.replicaAutoCar.completedAnimation) && (this.perfectAutoCar.completedAnimation)){
+                this.stage = 4;
+                console.log("SET THE STAGE TO LEVEL 4");
+            }
+        }
+
+        if (this.stage == 4){
+            if (this.addedPopUpStage4 == false){
+                let replicaCarTime = Math.round(((this.replicaAutoCar.millisecondAccounted / 1000) / 2) * 10) / 10;
+                let perfectCarTime = Math.round(((this.perfectAutoCar.millisecondAccounted / 1000) / 2) * 10) / 10;
+                let difference =  Math.abs(Math.round((replicaCarTime - perfectCarTime) * 10) / 10);
+                console.log("difference:", replicaCarTime - perfectCarTime);
+                console.log("replica car: "+ replicaCarTime);
+                console.log("perfect car: "+ perfectCarTime);
+                console.log("difference:", difference);
+                popUp2InfoBox3.text = "Your Time: " + replicaCarTime + "s";
+                popUp2InfoBox4.text = "Star's Time: " + perfectCarTime + "s";
+                // if won
+                if (replicaCarTime <= perfectCarTime){
+                    popUp2InfoBox5.text = "Won By: " + difference + "s";
+                    popUp2.textBoxObj.push(popUp2InfoBox1);
+                    popUp2.textBoxObj.push(popUp2InfoBox5);
+                }else{ // if lost
+                    popUp2InfoBox6.text = "Lose By: " + difference + "s";
+                    popUp2.textBoxObj.push(popUp2InfoBox2);
+                    popUp2.textBoxObj.push(popUp2InfoBox6);
+                }
+                popUp2.addToCurrentScreen();
+                this.addedPopUpStage4 = true;
             }
         }
     }
@@ -823,7 +976,7 @@ class Game{
                 }
             
                 this.nodeList.push(newNode);
-                gameScreen.addBackgroundObject(newNode);
+                gameScreen.addForegroundObject(newNode);
             
             }
             this.updateAllHeuristic();
@@ -1033,7 +1186,7 @@ class Game{
     addNode(node){
         this.nodeList.push(node);
         this.resetNode();
-        gameScreen.addBackgroundObject(node);
+        gameScreen.addForegroundObject(node);
         // this.updateAllHeuristic();
     }
 
@@ -1061,7 +1214,7 @@ class Game{
         this.nodeList.splice(index, 1);
 
         // remove node from background Object
-        gameScreen.removeBackgroundObject(nodeToRemove);
+        gameScreen.removeForegroundObject(nodeToRemove);
 
         // reset all nodes;
         this.resetNode();
@@ -1148,7 +1301,7 @@ class Node{
         // update color depending on if it's selected by mouse
         this.updateColor();
         // console.log("DRAWING THE NODE");
-        this.drawConnectionLines();
+        // this.drawConnectionLines();
         drawCircleGrid(this.x, this.y, this.activeColor);
         this.writeIdAndCord(); 
     }
@@ -1198,14 +1351,61 @@ class Node{
         let x = this.x * lengthOfABox
         let y = this.y * heightOfABox
 
-        writeText(this.id, 20, 0, false, x, y + 3, BLACK, 100);
-        writeText("g: " + Math.round(this.g), 20, 0, false, x, y + 30, BLACK, 100);
-        writeText("h: " + Math.round(this.heuristic), 20, 0, false, x, y + 60, BLACK, 100);
-        writeText("f: " + Math.round(this.f), 20, 0, false, x, y + 90, BLACK, 100);
+        // writeText(this.id, 20, 0, false, x, y + 3, BLACK, 100);
+        // writeText("g: " + Math.round(this.g), 20, 0, false, x, y + 30, BLACK, 100);
+        // writeText("h: " + Math.round(this.heuristic), 20, 0, false, x, y + 60, BLACK, 100);
+        // writeText("f: " + Math.round(this.f), 20, 0, false, x, y + 90, BLACK, 100);
     }
 
 }
 
+class PopUpBox{
+    constructor(screenList){
+        this.screenList = screenList;
+        this.backgroundBoxObj = [];
+        this.textBoxObj = [];
+        this.buttonBoxObj = [];
+        this.active = false;
+
+    }
+
+    addToCurrentScreen(){
+
+        this.screenList.forEach((screen) => {
+
+            if (screen.activeScreen){
+                this.backgroundBoxObj.forEach((box) => {
+                    screen.addPopUpObject(box);
+                });
+                this.textBoxObj.forEach((box) => {
+                    screen.addPopUpObject(box);
+                });
+                this.buttonBoxObj.forEach((box) => {
+                    screen.addPopUpButton(box);
+                });
+            }
+        });
+        this.active = true;
+    }
+
+    removeFromScreen(){
+        this.screenList.forEach((screen) => {
+
+            this.backgroundBoxObj.forEach((box) => {
+                screen.removePopUpObject(box);
+            });
+            this.textBoxObj.forEach((box) => {
+                screen.removePopUpObject(box);
+            });
+            this.buttonBoxObj.forEach((box) => {
+                screen.removePopUpButton(box);
+            });
+
+        });
+        this.active = false;
+    }
+
+}
 
 class Box{
     constructor(x, y, width, height, color){
@@ -1240,7 +1440,6 @@ class InfoBox{
         writeText(this.text, this.textSize, this.styleId, false, this.x + (this.width / 2), this.y + (this.height / 2) +
          (this.textSize / 2), BLACK, this.width);
     }
-
 
 }
 
@@ -1604,8 +1803,36 @@ class Screen{
 
         this.updateObjectList = [];
 
+        this.PopUpObjectList = [];
+
         this.activeScreen = false;
 
+    }
+
+    addPopUpObject(obj){
+        this.PopUpObjectList.push(obj);
+    }
+
+    removePopUpObject(obj){
+        let index = this.PopUpObjectList.indexOf(obj);
+        if (index != -1){
+            this.PopUpObjectList.splice(index, 1);
+        }
+    }
+
+    addPopUpButton(obj){
+        this.buttonList.push(obj);
+        this.addPopUpObject(obj);
+    }
+
+    removePopUpButton(btn){
+        // remove from button list
+        let index = this.buttonList.indexOf(btn);
+        if (index != -1){
+            this.buttonList.splice(index, 1);
+        }
+        // remove from UIObject List
+        this.removePopUpObject(btn);
     }
 
     addBackgroundObject(obj){
@@ -1688,6 +1915,11 @@ class Screen{
                 object.draw();
             });
 
+            // POPUP OBJECTS
+            this.PopUpObjectList.forEach((object) => {
+                object.draw();
+            });
+
         }
 
     }
@@ -1706,7 +1938,7 @@ class Screen{
 
 
 class Button{
-    constructor(Id, x, y, width, height, boxColor, boxHoverColor, text, textColor, textHoverColor, gameObj){
+    constructor(Id, x, y, width, height, boxColor, boxHoverColor, text, textColor, textHoverColor, gameObj, popUpList){
         this.Id = Id;
         this.x = x;
         this.y = y;
@@ -1729,6 +1961,10 @@ class Button{
         if (!(gameObj === undefined)){
             // console.log("done it");
             this.gameObj = gameObj;
+        }
+        if (!(popUpList === undefined)){
+            // console.log("done it");
+            this.popUpList = popUpList;
         }
 
     }
@@ -1835,16 +2071,28 @@ class Button{
                 playEasyBtnFunc(this.gameObj);
             }
             if (this.Id == 14){
-                // playEasyBtnFunc(this.gameObj);
+                playMediumBtnFunc(this.gameObj);
             }
             if (this.Id == 15){
-                // playEasyBtnFunc(this.gameObj);
+                playHardBtnFunc(this.gameObj);
             }
             if (this.Id == 16){
                 playCustomLevelBtnFunc(this.gameObj);
             }
             if (this.Id == 17){
                 backToMainMenuBtnFunc();
+            }
+            if (this.Id == 18){
+                startRace(this.gameObj, this.popUpList);
+            }
+            if (this.Id == 19){
+                backToMainMenuBtnFunc();
+            }
+            if (this.Id == 20){
+                backToMainMenuBtnFunc();
+            }
+            if (this.Id == 21){
+                retryMap();
             }
             click = false;
         }
@@ -1856,6 +2104,16 @@ class Button{
 //                                                              FUNCTIONS
 // ---------------------------------------------------------------------------------------------------------------------------------
 
+
+function startRace(gameObj, popUpList){
+    gameObj.stage = 3;
+    // remove all popups
+    popUpList.forEach((popUpBoxObj) => {
+        if (popUpBoxObj.active){
+            popUpBoxObj.removeFromScreen();
+        }
+    });
+}
 
 function addUpdateObjToCurrentScreen(obj){
     screenList.forEach((screen) => {
@@ -1940,7 +2198,7 @@ function drawCircle(x, y, radius, color){
 function drawCircleGrid(gridX, gridY, color){
     lengthOfABox = CANVAS_WIDTH / 50
     heightOfABox = CANVAS_HEIGHT / 50
-    radius = lengthOfABox;
+    radius = lengthOfABox / 2;
     x = gridX * lengthOfABox;
     y = gridY * heightOfABox;
 
@@ -2422,7 +2680,53 @@ function createMapWithMinimumOptimalRoute(minimumNumberOfNodeInOptimalRoute, gam
 //                                                        BUTTON FUNCTION
 // ---------------------------------------------------------------------------------------------------------------------------------
 
+function retryMap(){
+    // gameObj.replicaAutoCar.deleteCarPng();
+    // gameObj.perfectAutoCar.deleteCarPng();
+    gameScreen.removeForegroundObject(gameObj.replicaAutoCar.carImage);
+    gameScreen.removeForegroundObject(gameObj.perfectAutoCar.carImage);
+    gameObj.addedPopUpStage2 = false;
+    gameObj.addedPopUpStage4 = false;
+    gameObj.stage = 1;
+    gameObj.replicaAutoCar = null;
+    gameObj.perfectAutoCar = null;
+    gameScreen.updateObjectList = [];
+    gameScreen.addUpdateObject(gameObj);
+    // gameScreen.removeForegroundObject(gameObj.perfectAutoCar.carImage);
+
+    // let tempNodeList = gameObj.nodeList;
+    // let finishLine = gameObj.finishLine;
+    // let playerCar = gameObj.playerCar;
+    // enableGameScreen();
+
+    // gameScreen.addUpdateObject(gameObj);
+    // enableGameScreen();
+    // gameScreen.addForegroundObject(GetToFinishLine);
+    popUpList.forEach((popUp) => {
+        popUp.removeFromScreen();
+    });
+    popUp1.backgroundBoxObj = [];
+    popUp1.textBoxObj = [];
+    popUp1.buttonBoxObj = [];
+    popUp1.backgroundBoxObj.push(popUp1BackgroundBox);
+    popUp1.textBoxObj.push(popUp1InfoBox1);
+    popUp1.textBoxObj.push(popUp1InfoBox2);
+    popUp1.textBoxObj.push(popUp1InfoBox3);
+    popUp1.buttonBoxObj.push(popUp1Button1);
+    popUp1.buttonBoxObj.push(popUp1Button2);
+
+    popUp2.backgroundBoxObj = [];
+    popUp2.textBoxObj = [];
+    popUp2.buttonBoxObj = [];
+    popUp2.backgroundBoxObj.push(popUp2BackgroundBox);
+    popUp2.textBoxObj.push(popUp2InfoBox3);
+    popUp2.textBoxObj.push(popUp2InfoBox4);
+    popUp2.buttonBoxObj.push(popUp2Button1);
+    popUp2.buttonBoxObj.push(popUp2Button2);
+}
+
 function resetAllScreens(){
+    console.log("resetted all screens");
     // deactivate
     screenList.forEach((screen) => {
         screen.activeScreen = false;
@@ -2431,9 +2735,33 @@ function resetAllScreens(){
         screen.drawBackgroundObjectList = [];
         screen.drawUIObjectList = [];
         screen.updateObjectList = [];
+        screen.PopUpObjectList = [];
     });
 
-    // gameObj.resetGame = true;
+    // reset gameObj
+    gameObj.resetConstructor();
+    // reset Popup List
+    popUpList.forEach((popUp) => {
+        popUp.removeFromScreen();
+    });
+    popUp1.backgroundBoxObj = [];
+    popUp1.textBoxObj = [];
+    popUp1.buttonBoxObj = [];
+    popUp1.backgroundBoxObj.push(popUp1BackgroundBox);
+    popUp1.textBoxObj.push(popUp1InfoBox1);
+    popUp1.textBoxObj.push(popUp1InfoBox2);
+    popUp1.textBoxObj.push(popUp1InfoBox3);
+    popUp1.buttonBoxObj.push(popUp1Button1);
+    popUp1.buttonBoxObj.push(popUp1Button2);
+
+    popUp2.backgroundBoxObj = [];
+    popUp2.textBoxObj = [];
+    popUp2.buttonBoxObj = [];
+    popUp2.backgroundBoxObj.push(popUp2BackgroundBox);
+    popUp2.textBoxObj.push(popUp2InfoBox3);
+    popUp2.textBoxObj.push(popUp2InfoBox4);
+    popUp2.buttonBoxObj.push(popUp2Button1);
+    popUp2.buttonBoxObj.push(popUp2Button2);
 
 }
 
@@ -2742,25 +3070,31 @@ function randomNodeBtnFunc(minRoute, gameObj){
     console.log("it was a success");
 }
 
-
-function resetScreens(gameObj){
-
-}
-
-
 function playEasyBtnFunc(gameObj){
     enableGameScreen();
     // randomize the node
-    let map = [[5, 35, [], 0],[4, 19, [0,3,5]],[10, 45, [0,6]],[15, 32, [0,7]],[25, 11, [10]],[13, 18, [4]],
-             [37, 48, [8,9]],[25, 30, [4,8]],[48, 30, [9]],[33, 37, [10]],[44, 10, [], 1]];
-    // gameObj.setMap(map);
     randomNodeBtnFunc(5, gameObj);
     gameScreen.addUpdateObject(gameObj);
     // enableGameScreen();
     gameScreen.addForegroundObject(GetToFinishLine);
+}
 
+function playMediumBtnFunc(gameObj){
+    enableGameScreen();
+    // randomize the node
+    randomNodeBtnFunc(8, gameObj);
+    gameScreen.addUpdateObject(gameObj);
+    // enableGameScreen();
+    gameScreen.addForegroundObject(GetToFinishLine);
+}
 
-
+function playHardBtnFunc(gameObj){
+    enableGameScreen();
+    // randomize the node
+    randomNodeBtnFunc(10, gameObj);
+    gameScreen.addUpdateObject(gameObj);
+    // enableGameScreen();
+    gameScreen.addForegroundObject(GetToFinishLine);
 }
 
 function playCustomLevelBtnFunc(gameObj){
@@ -2780,7 +3114,6 @@ function playCustomLevelBtnFunc(gameObj){
 
     editObj = new Editing(gameObj);
     gameScreen.addUpdateObject(editObj);
-
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------------
@@ -2942,6 +3275,14 @@ let playMenuScreenBG = new Box(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT, PURPLE);
 
 let playMenuScreen = new Screen(1, "secondScreen", [playEasyGameBtn, playMediumGameBtn, playHardGameBtn, backplayMenuBtn]);
 
+// -=-=-=-=-=-=-=-=- GAME SCREEN -=-=-=-=-=-=-=-=-
+
+let gameScreen = new Screen(2, "game Screen", []);
+
+// -=-=-=-=-=-=-=-=- SCREEN LIST -=-=-=-=-=-=-=-=-
+
+screenList = [menuScreen, playMenuScreen, gameScreen];
+
 // -=-=-=-=-=-=-=-=- CUSTOM LEVEL SCREEN -=-=-=-=-=-=-=-=-
 
 let doConnectedNodeBtn = new Button(3, pToP(4), pToP(5), pToP(20), pToP(5), YELLOW, GREEN, "Next Step", BLACK, WHITE, gameObj);
@@ -2970,19 +3311,72 @@ let backCustomLevelBtn = new Button(17, pToP(1), pToP(94), pToP(12), pToP(5), GR
 
 let GetToFinishLine = new InfoBox(pToP(5), pToP(5), pToP(90), pToP(10), YELLOW, "Get to the finish line with the most efficient route!", 30, 0);
 
+// -=-=-=-=-=-=-=-=- BUILDING POPUPS -=-=-=-=-=-=-=-=-
+
+popUpList = [];
+
+let popUp1 = new PopUpBox(screenList);
+popUpList.push(popUp1);
+let popUp1BackgroundBox = new Box(pToP(20), pToP(20), pToP(60), pToP(60), YELLOW);
+let popUp1InfoBox1 = new InfoBox(pToP(25), pToP(25), pToP(50), pToP(10), YELLOW, "Completed The Map", 50, 0);
+let popUp1InfoBox2 = new InfoBox(pToP(25), pToP(40), pToP(50), pToP(5), YELLOW, "Now your route will be", 30, 0);
+let popUp1InfoBox3 = new InfoBox(pToP(25), pToP(45), pToP(50), pToP(5), YELLOW, "matched up against our star!", 30, 0);
+let popUp1Button1 = new Button(18, pToP(55), pToP(65), pToP(20), pToP(10), GREEN, LIGHT_GREEN, "Race The Star", BLACK, WHITE, gameObj, popUpList);
+let popUp1Button2 = new Button(19, pToP(25), pToP(65), pToP(20), pToP(10), RED, LIGHT_RED, "EXIT", BLACK, WHITE, gameObj, popUpList);
+popUp1.backgroundBoxObj.push(popUp1BackgroundBox);
+popUp1.textBoxObj.push(popUp1InfoBox1);
+popUp1.textBoxObj.push(popUp1InfoBox2);
+popUp1.textBoxObj.push(popUp1InfoBox3);
+popUp1.buttonBoxObj.push(popUp1Button1);
+popUp1.buttonBoxObj.push(popUp1Button2);
+
+
+let popUp2 = new PopUpBox(screenList);
+popUpList.push(popUp2);
+let popUp2BackgroundBox = new Box(pToP(20), pToP(20), pToP(60), pToP(60), YELLOW);
+let popUp2InfoBox1 = new InfoBox(pToP(25), pToP(25), pToP(50), pToP(10), GREEN, "YOU WON!", 50, 0);
+let popUp2InfoBox2 = new InfoBox(pToP(25), pToP(25), pToP(50), pToP(10), RED, "YOU LOST!", 50, 0);
+let popUp2InfoBox3 = new InfoBox(pToP(25), pToP(40), pToP(30), pToP(5), GREEN, "Your Time: ", 30, 0);
+let popUp2InfoBox4 = new InfoBox(pToP(25), pToP(48), pToP(30), pToP(5), RED, "Star's Time: ", 30, 0);
+let popUp2InfoBox5 = new InfoBox(pToP(25), pToP(56), pToP(30), pToP(5), BLUE, "Won By: ", 30, 0);
+let popUp2InfoBox6 = new InfoBox(pToP(25), pToP(56), pToP(30), pToP(5), BLUE, "Lose By: ", 30, 0);
+
+let popUp2Button1 = new Button(20, pToP(55), pToP(65), pToP(20), pToP(10), GREEN, LIGHT_GREEN, "Main Menu", BLACK, WHITE, gameObj, popUpList);
+let popUp2Button2 = new Button(21, pToP(25), pToP(65), pToP(20), pToP(10), AQUA, LIGHT_GREEN, "Retry Map", BLACK, WHITE, gameObj, popUpList);
+// let popUp2Button3 = new Button(18, pToP(55), pToP(65), pToP(20), pToP(10), GREEN, LIGHT_GREEN, "Play Again", BLACK, WHITE, gameObj, popUpList);
+
+// WON:
+// popUp2.textBoxObj.push(popUp2InfoBox1);
+// popUp2.textBoxObj.push(popUp2InfoBox5);
+
+// LOST:
+// popUp2.textBoxObj.push(popUp2InfoBox2);
+// popUp2.textBoxObj.push(popUp2InfoBox6);
+
+popUp2.backgroundBoxObj.push(popUp2BackgroundBox);
+popUp2.textBoxObj.push(popUp2InfoBox3);
+popUp2.textBoxObj.push(popUp2InfoBox4);
+popUp2.buttonBoxObj.push(popUp2Button1);
+popUp2.buttonBoxObj.push(popUp2Button2);
+// popUp1.buttonBoxObj.push(popUp2Button3);
+// popUp2.addToCurrentScreen();
+
+// test1.removeFromScreen();
+
+// -=-=-=-=-=-=-=-=- TIMER TESTING -=-=-=-=-=-=-=-=-
+
+
 // ---------------------------------------------------------------------------------------------------------------------------------
 //                                                      MAIN PROGRAM LOOP
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-let gameScreen = new Screen(2, "game Screen", []);
-
-screenList = [menuScreen, playMenuScreen, gameScreen];
-
 let backgroundImage = drawPngOnCurrentScreen("mainMenuBackground2.png", (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 2), CANVAS_WIDTH, CANVAS_HEIGHT, 0, "background");
 
-let buttonImage = drawPngOnCurrentScreen("button.png", 200, 150, 200, 100, 0, "background");
+// let buttonImage = drawPngOnCurrentScreen("button.png", 200, 150, 200, 100, 0, "background");
 
 function mainLoop(){
+    
+    // console.log(tempTimer.second + ": " + tempTimer.millisecond);
     mouseClickPos = mouseClickPosInCanvas();
     mouseHoverPos = mouseHoverPosInCanvas();
 
@@ -2993,17 +3387,20 @@ function mainLoop(){
             screen.draw();
             screen.loadButtons();
             screen.updateObjects();
-            console.log("background:", screen.drawBackgroundObjectList);
-            console.log("foreground: ", screen.drawForegroundObjectList);
-            console.log("UI: ", screen.drawUIObjectList);
-            console.log("Update List: ", screen.updateObjectList);
+            // console.log("background:", screen.drawBackgroundObjectList);
+            // console.log("foreground: ", screen.drawForegroundObjectList);
+            // console.log("UI: ", screen.drawUIObjectList);
+            // console.log("buttonList;", screen.buttonList);
+            // console.log("Update List: ", screen.updateObjectList);
+            // console.log("Popup object List: ", screen.PopUpObjectList);
+            // this.buttonList = buttonList;
+    
         }
     });
 
     if (click){
-        if (gameScreen.activeScreen){
-        
-        }
+        console.log(screenList);
+        console.log(gameObj);
     }
 
     if (aDown){
