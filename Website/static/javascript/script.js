@@ -668,7 +668,7 @@ class MyImage{
     constructor(imageName, xCenter, yCenter, imageWidth, imageHeight){
         this.imageName = imageName;
         this.image = new Image();
-        this.image.src = "..static/Imgs/" + this.imageName;
+        this.image.src = "..static/imgs/" + this.imageName;
         this.x = xCenter;
         this.y = yCenter;
 
