@@ -66,7 +66,7 @@ function scrollToPage(num){
 switchDiv(0);
 
 text1 = "Hey, my name is"
-text2 = "Tipu"
+text2 = "Tipu Butt"
 text3 = "And I'm an"
 text4 = "Aspiring Software Engineer"
 
@@ -86,10 +86,10 @@ function initalPause(initalTime, string, elementID, time){
 }
 
 
-initalPause(2000, text1, "sec-1-text-1", 100);
-initalPause(3900, text2, "sec-1-text-2", 100);
-initalPause(4500, text3, "sec-1-text-3", 100);
-initalPause(5900, text4, "sec-1-text-4", 100);
+initalPause(1500, text1, "sec-1-text-1", 100);
+initalPause(3400, text2, "sec-1-text-2", 100);
+initalPause(4400, text3, "sec-1-text-3", 100);
+initalPause(5500, text4, "sec-1-text-4", 100);
 
 let barsComplete = false;
 
@@ -99,18 +99,22 @@ function barLoader(i){
 
     listOfBars[i].setAttribute('id', 'play-animation-' + (i+1).toString());
     i += 1;
-
-    setTimeout(function() {barLoader(i)}, 500);
+    if (i < 5){
+        setTimeout(function() {barLoader(i)}, 500);
+    }
 
 
 }
 
 function activateBars(){
-    window.addEventListener("scroll", () => {
-        if (window.scrollY > 800 && window.scrollY < 1400){
-             barLoader(i);
-            }
-        });
+    if (!barsComplete){
+        window.addEventListener("scroll", () => {
+            if (window.scrollY > 800 && window.scrollY < 1400){
+                 barLoader(i);
+                 barsComplete = true;
+                }
+            });
+    }
 }
 activateBars();
 

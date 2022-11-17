@@ -4,12 +4,13 @@
 
     <head>
         <title>Tipu's Page</title>
-        {% load static %}
+        <!-- {% load static %} -->
         <meta charset="UTF-8">
         <meta name="viewport" content="initial-scale=1">
 
 
-        <link href="{% static '/css/style.css' %}" rel="stylesheet" />
+        <link href="../static/css/style.css" rel="stylesheet" />
+        <!-- <link href="{% static '/css/style.css' %}" rel="stylesheet" /> -->
 
         <!-- LINK TO A FONT FROM GOOGLE -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,7 +18,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;1,100;1,200;1,300;1,400;1,500;1,600&family=Montserrat:wght@100;200;300;400;500;600;700&family=Oswald:wght@200;300;400;500;600&display=swap" rel="stylesheet">
         <script src="https://kit.fontawesome.com/ee8d0f4887.js" crossorigin="anonymous"></script>
 
-        <script src="{% static '/javascript/script.js' %}" defer></script>
+        <script src="../static/javascript/script.js" defer></script>
+        <!-- <script src="{% static '/javascript/script.js' %}" defer></script> -->
     </head>
 
     <body>
@@ -27,7 +29,7 @@
         <div class ="topBar">
             <button class="btn-top" onclick="scrollToPage(1);">About</button>
             <button class="btn-top" onclick="scrollToPage(2);">Projects</button>
-            <button class="btn-top" onclick="scrollToPage(3);">Contact</button>
+            <button class="btn-top" onclick="scrollToPage(3);">Race The Star</button>
         </div>
         <div class="leftBar">
             <a href="https://github.com/TipuCS"><button class="btn-left"><i class="fa-brands fa-github" style = "font-size: 30px;"></i></button></a>
@@ -51,7 +53,7 @@
 
         <div id="sec-2">
             <div class = "sec-2-box">
-                <div class = "header"> About me </div>
+                <div class = "title"> About me </div>
                 <div class = "defaultText">> Im a <span class = "complimentaryColorText">computer science</span> student who 
                     enjoys making games in his spare time.
                 </div>
@@ -68,51 +70,66 @@
                 </div>
                 <div class = "sec-2-box-2">
                     <div class = "header"> Skills </div>
+
+
+                    <!-- 25 24
+                        55 55
+                        85 85
+                        40 40
+                        70 70 -->
+
+                    <!-- Python -->
                     <div class = "sec-2-fullBar", style="top: 25%;">
                         <div class = "sec-2-leftSide">
                             <div class = "sec-2-leftSide-text">Python</div>
                         </div>
                         <div class = "sec-2-rightSide" id = "sec-2-1"></div>
                     </div>
-
                     <div class = "sec-2-rightSide-text" style = "top: 24%;">85%</div>
+
+                    <!-- JavaScript -->
 
                     <div class = "sec-2-fullBar", style="top: 40%;">
                         <div class = "sec-2-leftSide">
-                            <div class = "sec-2-leftSide-text">C#</div>
+                            <div class = "sec-2-leftSide-text">JavaScript</div>
                         </div>
                         <div class = "sec-2-rightSide" id = "sec-2-2"></div>
                     </div>
 
-                    <div class = "sec-2-rightSide-text", style = "top: 40%;">65%</div>
+                    <div class = "sec-2-rightSide-text", style = "top: 40%;">80%</div>
+
+                    <!-- CSS -->
 
                     <div class = "sec-2-fullBar", style="top: 55%;">
                         <div class = "sec-2-leftSide">
-                            <div class = "sec-2-leftSide-text">JavaScript</div>
+                            <div class = "sec-2-leftSide-text">CSS</div>
                         </div>
                         <div class = "sec-2-rightSide" id = "sec-2-3"></div>
                     </div>
 
-                    <div class = "sec-2-rightSide-text", style = "top: 55%;">80%</div>
+                    <div class = "sec-2-rightSide-text", style = "top: 55%;">70%</div>
 
+                    <!-- C# -->
                     <div class = "sec-2-fullBar", style="top: 70%;">
                         <div class = "sec-2-leftSide">
-                            <div class = "sec-2-leftSide-text">HTML</div>
+                            <div class = "sec-2-leftSide-text">C#</div>
                         </div>
                         <div class = "sec-2-rightSide" id = "sec-2-4"></div>
                     </div>
 
                     <div class = "sec-2-rightSide-text", style = "top: 70%;">65%</div>
 
+                    <!-- HTML -->
 
                     <div class = "sec-2-fullBar", style="top: 85%;">
                         <div class = "sec-2-leftSide">
-                            <div class = "sec-2-leftSide-text">CSS</div>
+                            <div class = "sec-2-leftSide-text">HTML</div>
                         </div>
                         <div class = "sec-2-rightSide" id = "sec-2-5"></div>
                     </div>
 
-                    <div class = "sec-2-rightSide-text", style = "top: 85%;">70%</div>
+                    <div class = "sec-2-rightSide-text", style = "top: 85%;">65%</div>
+
                 </div>
                 
              
@@ -123,10 +140,12 @@
             <div class = "sec-3-box">
                 <div class = "title">My Favourite Projects</div>
                 <div class = "sec-3-box-box">
-                    <button class = "sec-3-btn" onclick="switchDiv(0);" id = "firstDivButton"> Chess </button>
+                    <div class = "sec-3-box-for-button">
+                        <button class = "sec-3-btn" onclick="switchDiv(0);" id = "firstDivButton"> Chess </button>
                     <button class = "sec-3-btn" onclick="switchDiv(1);"> Snake </button>
                     <button class = "sec-3-btn" onclick="switchDiv(2);"> Connect 4 </button>
                     <button class = "sec-3-btn" onclick="switchDiv(3);"> MineSweeper </button>
+                    </div>
                     <!-- <div class = "sec-3-box-box-box"> -->
                         <!-- CHESS  -->
                         <div class = "sec-3-chess">
@@ -229,8 +248,17 @@
 
         </div>
         <div id="sec-4">
+            <div class = "sec-4-box">
 
-            <canvas id="canvas1"></canvas>
+                <div class = "title">Race the Star</div>
+                <div class = "sec-4-gameBox">
+
+                    <canvas id="canvas1"></canvas>
+
+                </div>
+
+            </div>
+
 
         </div>
 
