@@ -1,5 +1,5 @@
 HOW TO RUN THE SERVER: 
-1. Go to Google cloud VM instance
+1. Go to Google cloud VM instance	
 - Google Cloud -> Compute Engine -> VM instances
 2. Go to SSH console for "portfoliowebsite"
 3. Run the manage.py file:
@@ -14,14 +14,18 @@ runsslserver: runs the server using "https"
 0.0.0.0:443 : the 443 means https (80 would mean http)
 
 HOW TO UPDATE WEBSITE:
-1. Go to "GitHub Desktop"
-2. Go to the "PortfolioWebsite" repository (top left)
-3. Click "Commit to main" bottom left
-4. Click "Push origin" to make my local files into the official files of the repository
-5. Go to Google cloud VM instance
+1. Change the javascript Image class source
+- "this.image.src = "../static/imgs/" + this.imageName;"
+- this is to load the images from the correct file
+- the .. means go back a file (from index to static)
+2. Go to "GitHub Desktop"
+3. Go to the "PortfolioWebsite" repository (top left)
+4. Click "Commit to main" bottom left
+5. Click "Push origin" to make my local files into the official files of the repository
+6. Go to Google cloud VM instance
 - Google Cloud -> Compute Engine -> VM instances
-6. Go to SSH console for "portfoliowebsite"
-7. Pull the new files from Github
+7. Go to SSH console for "portfoliowebsite"
+8. Pull the new files from Github
 - type "cd PortfolioWebsite" to go into the directory
 - type "git pull" into the SSH console to update the folders
 

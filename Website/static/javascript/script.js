@@ -1,3 +1,141 @@
+// document.getElementById("firstDivButton").click();
+
+// const bar1 = document.querySelector("#sec-2-TL-1");
+// const bar2 = document.querySelector("#sec-2-TL-2");
+// const bar3 = document.querySelector("#sec-2-TL-3");
+// const bar4 = document.querySelector("#sec-2-TL-4");
+// const bar5 = document.querySelector("#sec-2-TL-5");
+
+const sec2text = document.querySelector(".sec-2-box");
+
+let bar1 = document.querySelector("#sec-2-1");
+let bar2 = document.querySelector("#sec-2-2");
+let bar3 = document.querySelector("#sec-2-3");
+let bar4 = document.querySelector("#sec-2-4");
+let bar5 = document.querySelector("#sec-2-5");
+
+let listOfBars = [bar1, bar2, bar3, bar4, bar5];
+
+// bar1.setAttribute('id', 'play-animation-1');
+
+
+const chessDiv = document.querySelector(".sec-3-chess");
+const snakeDiv = document.querySelector(".sec-3-snake");
+const connectDiv = document.querySelector(".sec-3-connect");
+const mineDiv = document.querySelector(".sec-3-mine");
+
+
+function switchDiv(num){
+    chessDiv.classList.add("chessDiv--hidden");
+    snakeDiv.classList.add("snakeDiv--hidden");
+    connectDiv.classList.add("connectDiv--hidden");
+    mineDiv.classList.add("mineDiv--hidden");
+    if (num == 0){
+        chessDiv.classList.remove("chessDiv--hidden");
+    } 
+    if (num == 1){
+        snakeDiv.classList.remove("snakeDiv--hidden");
+    }
+    if (num == 2){
+        connectDiv.classList.remove("connectDiv--hidden");
+    }
+    if (num == 3){
+        mineDiv.classList.remove("mineDiv--hidden");
+    }
+}
+
+
+function scrollToPage(num){
+    height = 0
+    if (num == 0){
+        height = 0;
+    }
+    if (num == 1){
+        height = window.innerHeight;
+    }
+    if (num == 2){
+        height = window.innerHeight * 2;
+    }
+    if (num == 3){
+        height = window.innerHeight * 100;
+    }
+    document.documentElement.scrollTop = height; 
+    console.log(document.documentElement.scrollTop);
+}
+
+switchDiv(0);
+
+text1 = "Hey, my name is"
+text2 = "Tipu"
+text3 = "And I'm an"
+text4 = "Aspiring Software Engineer"
+
+function slowlyShowLetters(letterNum, string, elementID, time){
+    currentText = string.slice(0, letterNum);
+
+    document.getElementById(elementID).innerHTML = currentText;
+    // console.log("success");
+
+    if (!(letterNum == string.length)){
+        setTimeout(function() {slowlyShowLetters(letterNum + 1, string, elementID, time)}, time);
+    }
+}
+
+function initalPause(initalTime, string, elementID, time){
+    setTimeout(function() {slowlyShowLetters(1, string, elementID, time)}, initalTime);
+}
+
+
+initalPause(2000, text1, "sec-1-text-1", 100);
+initalPause(3900, text2, "sec-1-text-2", 100);
+initalPause(4500, text3, "sec-1-text-3", 100);
+initalPause(5900, text4, "sec-1-text-4", 100);
+
+let barsComplete = false;
+
+let i = 0;
+
+function barLoader(i){
+
+    listOfBars[i].setAttribute('id', 'play-animation-' + (i+1).toString());
+    i += 1;
+
+    setTimeout(function() {barLoader(i)}, 500);
+
+
+}
+
+function activateBars(){
+    window.addEventListener("scroll", () => {
+        if (window.scrollY > 800 && window.scrollY < 1400){
+             barLoader(i);
+            }
+        });
+}
+activateBars();
+
+
+
+
+// -=-=-=-=-=-=-=-=- START OF THE GAME CODE -=-=-=-=-=-=-=-=-
+// -=-=-=-=-=-=-=-=- START OF THE GAME CODE -=-=-=-=-=-=-=-=-
+// -=-=-=-=-=-=-=-=- START OF THE GAME CODE -=-=-=-=-=-=-=-=-
+// -=-=-=-=-=-=-=-=- START OF THE GAME CODE -=-=-=-=-=-=-=-=-
+// -=-=-=-=-=-=-=-=- START OF THE GAME CODE -=-=-=-=-=-=-=-=-
+// -=-=-=-=-=-=-=-=- START OF THE GAME CODE -=-=-=-=-=-=-=-=-
+// -=-=-=-=-=-=-=-=- START OF THE GAME CODE -=-=-=-=-=-=-=-=-
+// -=-=-=-=-=-=-=-=- START OF THE GAME CODE -=-=-=-=-=-=-=-=-
+// -=-=-=-=-=-=-=-=- START OF THE GAME CODE -=-=-=-=-=-=-=-=-
+// -=-=-=-=-=-=-=-=- START OF THE GAME CODE -=-=-=-=-=-=-=-=-
+// -=-=-=-=-=-=-=-=- START OF THE GAME CODE -=-=-=-=-=-=-=-=-
+// -=-=-=-=-=-=-=-=- START OF THE GAME CODE -=-=-=-=-=-=-=-=-
+// -=-=-=-=-=-=-=-=- START OF THE GAME CODE -=-=-=-=-=-=-=-=-
+// -=-=-=-=-=-=-=-=- START OF THE GAME CODE -=-=-=-=-=-=-=-=-
+// -=-=-=-=-=-=-=-=- START OF THE GAME CODE -=-=-=-=-=-=-=-=-
+// -=-=-=-=-=-=-=-=- START OF THE GAME CODE -=-=-=-=-=-=-=-=-
+
+
+
 // ---------------------------------------------------------------------------------------------------------------------------------
 //                                                      SETUP
 // ---------------------------------------------------------------------------------------------------------------------------------

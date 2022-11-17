@@ -1,21 +1,240 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
-<head>
-    {% load static %}
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="{% static '/css/style.css' %}" rel="stylesheet" />
-    <script src="{% static '/javascript/script.js' %}" defer></script>
-    <title>Document</title>
-</head>
+    <head>
+        <title>Tipu's Page</title>
+        {% load static %}
+        <meta charset="UTF-8">
+        <meta name="viewport" content="initial-scale=1">
+
+
+        <link href="{% static '/css/style.css' %}" rel="stylesheet" />
+
+        <!-- LINK TO A FONT FROM GOOGLE -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;1,100;1,200;1,300;1,400;1,500;1,600&family=Montserrat:wght@100;200;300;400;500;600;700&family=Oswald:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+        <script src="https://kit.fontawesome.com/ee8d0f4887.js" crossorigin="anonymous"></script>
+
+        <script src="{% static '/javascript/script.js' %}" defer></script>
+    </head>
 
     <body>
+        <div class="topLeftBar">
+            <button class="btn-topleft" onclick="scrollToPage(0);"><i class="fa-solid fa-angles-up" style = "font-size: 50px;"></i></button>
+        </div>
+        <div class ="topBar">
+            <button class="btn-top" onclick="scrollToPage(1);">About</button>
+            <button class="btn-top" onclick="scrollToPage(2);">Projects</button>
+            <button class="btn-top" onclick="scrollToPage(3);">Contact</button>
+        </div>
+        <div class="leftBar">
+            <a href="https://github.com/TipuCS"><button class="btn-left"><i class="fa-brands fa-github" style = "font-size: 30px;"></i></button></a>
+            <a href="https://www.linkedin.com/in/tipu-butt-047971244/"><button class="btn-left"> <i class="fa-brands fa-linkedin-in"style = "font-size: 30px;"></i></button></a>
+            <a href="https://leetcode.com/TipuB/"><button class="btn-left"><i class="fa-solid fa-code"style = "font-size: 30px;"></i></button></a>
+            <!-- <button class="btn-left"><i class="fa-brands fa-github" style = "font-size: 30px;"></i></button>
+            <button class="btn-left"> <i class="fa-brands fa-linkedin-in"style = "font-size: 30px;"></i></button>
+            <button class="btn-left"><i class="fa-solid fa-code"style = "font-size: 30px;"></i></button> -->
+        </div>
+        <div id="sec-1">
+            <div class = "sec-1-mainBox">
+                <!-- <div class = "clickWordText">clickWordText</div>
+                <div class = "defaultText">Default Text</div>
+                <div class = "header">header</div> -->
+                <div class = "defaultText" id = "sec-1-text-1"></div>
+                <div class = "title" id = "sec-1-text-2"></div>
+                <div class = "defaultText" id = "sec-1-text-3"></div>
+                <div class = "title" id = "sec-1-text-4"></div>
+            </div>
+        </div>
 
-        <canvas id="canvas1"></canvas>
-        
+        <div id="sec-2">
+            <div class = "sec-2-box">
+                <div class = "header"> About me </div>
+                <div class = "defaultText">> Im a <span class = "complimentaryColorText">computer science</span> student who 
+                    enjoys making games in his spare time.
+                </div>
+                <div class = "defaultText">> I primarily focus on <span class = "complimentaryColorText">python</span>. Due to it's simplicity, I was able to quickly 
+                    pick up the syntaxes and create my favourite games such as <span class = "complimentaryColorText">Chess</span>, <span class = "complimentaryColorText">Snake</span>,
+                    <span class = "complimentaryColorText"> Connect 4</span> and more!
+                </div>
+                <div class = "defaultText">
+                    > I've dabbled in <span class = "complimentaryColorText">C#</span> through the unity <span class = "complimentaryColorText">game engine</span>. Although it took
+                    some time to grasp this new environment, I was able to create a <span class = "complimentaryColorText">Driving Instructor 3D</span> Game after a few weeks of development.
+                </div>
+                <div class = "defaultText">> Recently, I've been learning to design websites through <span class = "complimentaryColorText">CSS</span> and make them
+                    <span class = "complimentaryColorText">interactive</span> for the user through<span class = "complimentaryColorText"> JavaScript</span>.
+                </div>
+                <div class = "sec-2-box-2">
+                    <div class = "header"> Skills </div>
+                    <div class = "sec-2-fullBar", style="top: 25%;">
+                        <div class = "sec-2-leftSide">
+                            <div class = "sec-2-leftSide-text">Python</div>
+                        </div>
+                        <div class = "sec-2-rightSide" id = "sec-2-1"></div>
+                    </div>
+
+                    <div class = "sec-2-rightSide-text" style = "top: 24%;">85%</div>
+
+                    <div class = "sec-2-fullBar", style="top: 40%;">
+                        <div class = "sec-2-leftSide">
+                            <div class = "sec-2-leftSide-text">C#</div>
+                        </div>
+                        <div class = "sec-2-rightSide" id = "sec-2-2"></div>
+                    </div>
+
+                    <div class = "sec-2-rightSide-text", style = "top: 40%;">65%</div>
+
+                    <div class = "sec-2-fullBar", style="top: 55%;">
+                        <div class = "sec-2-leftSide">
+                            <div class = "sec-2-leftSide-text">JavaScript</div>
+                        </div>
+                        <div class = "sec-2-rightSide" id = "sec-2-3"></div>
+                    </div>
+
+                    <div class = "sec-2-rightSide-text", style = "top: 55%;">80%</div>
+
+                    <div class = "sec-2-fullBar", style="top: 70%;">
+                        <div class = "sec-2-leftSide">
+                            <div class = "sec-2-leftSide-text">HTML</div>
+                        </div>
+                        <div class = "sec-2-rightSide" id = "sec-2-4"></div>
+                    </div>
+
+                    <div class = "sec-2-rightSide-text", style = "top: 70%;">65%</div>
+
+
+                    <div class = "sec-2-fullBar", style="top: 85%;">
+                        <div class = "sec-2-leftSide">
+                            <div class = "sec-2-leftSide-text">CSS</div>
+                        </div>
+                        <div class = "sec-2-rightSide" id = "sec-2-5"></div>
+                    </div>
+
+                    <div class = "sec-2-rightSide-text", style = "top: 85%;">70%</div>
+                </div>
+                
+             
+            </div>
+        </div>
+        <div id="sec-3">
+
+            <div class = "sec-3-box">
+                <div class = "title">My Favourite Projects</div>
+                <div class = "sec-3-box-box">
+                    <button class = "sec-3-btn" onclick="switchDiv(0);" id = "firstDivButton"> Chess </button>
+                    <button class = "sec-3-btn" onclick="switchDiv(1);"> Snake </button>
+                    <button class = "sec-3-btn" onclick="switchDiv(2);"> Connect 4 </button>
+                    <button class = "sec-3-btn" onclick="switchDiv(3);"> MineSweeper </button>
+                    <!-- <div class = "sec-3-box-box-box"> -->
+                        <!-- CHESS  -->
+                        <div class = "sec-3-chess">
+                            <div class = "header"> Chess <span class = "defaultText" style = "top: 0;">- Python</span></div>
+                        
+                            <div class = "defaultText">Source Code: <a href="https://github.com/TipuCS/Chess/blob/main/main..py"><span class = "defaultText">GitHub</span></a></div>
+                            
+                            <div class = "sec-3-chess-box">
+                                <div class = "sec-3-video-box">
+                                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/v6x09-esPrM" title="YouTube video player" frameborder="0"
+                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                                <div class = "sec-3-chess-box-textbox" style = "min-width: 350px;">
+                                    <div class = "header">Features Include:</div>
+                                    <div class = "defaultText"> > Objects on the board can be moved with mouse Clicks</div>
+                                    <div class = "defaultText"> > All objects have an accurate moveset which is visibly indicated by brown circles</div>
+                                    <div class = "defaultText"> > Objects are able to capture enemy objects on their turn</div>
+                                    <div class = "defaultText"> > Fully functioning "check" mechanic implemented</div>
+                                    <div class = "defaultText"> > "Back" Button allowing the user to undo any amount of moves</div>
+                                    <div class = "defaultText"> > Special case moves accurately implemented (for instance: en passant, castling)</div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <!-- </div> -->
+
+                        <!-- SNAKE -->
+                        <div class = "sec-3-snake">
+                            <div class = "header"> Snake<span class = "defaultText" style = "top: 0;">- Python</span></div>
+                
+                            <div class = "defaultText">Source Code: <a href="https://github.com/TipuCS/Snake/blob/main/main.py"><span class = "defaultText">GitHub</span></a></div>
+                            
+                            <div class = "sec-3-snake-box">
+                                <div class = "sec-3-video-box">
+                                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/hpaCtg6UR74" title="YouTube video player" frameborder="0"
+                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                                <div class = "sec-3-snake-box-textbox" style = "min-width: 400px;">
+                                    <div class = "header">Features Include:</div>
+                                    <div class = "defaultText"> > Snake automatically travels forwards at a constant speed</div>
+                                    <div class = "defaultText"> > Snake grows in length by 1 when it eats the food</div>
+                                    <div class = "defaultText"> > Player can change the direction of the snake with "A" and "D" key</div>
+                                    <div class = "defaultText"> > When snake travels through one wall, it comes back through other side</div>
+                                    <div class = "defaultText"> > Food automatically respawns in a random location when the snake eats it</div>
+                                    <div class = "defaultText"> > Stops the game when snake touches it's own tail (LOSE)</div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- CONNECT 4 -->
+                        <div class = "sec-3-connect">
+                            <div class = "header"> Connect 4<span class = "defaultText" style = "top: 0;">- Python</span></div>
+                            <div class = "defaultText">Source Code: <a href="https://github.com/TipuCS/Connect-4/blob/main/main.py"><span class = "defaultText">GitHub</span></a></div>
+                            
+                            <div class = "sec-3-connect-box">
+                                <div class = "sec-3-video-box">
+                                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/xo4BevM_9Wg" title="YouTube video player" frameborder="0"
+                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                                <div class = "sec-3-connect-box-textbox" style = "min-width: 400px;">
+                                    <div class = "header">Features Include:</div>
+                                    <div class = "defaultText"> > Click-able Green buttons at the bottom to decide which row to play counter</div>
+                                    <div class = "defaultText"> > Colored box at the bottom to indicate which color's turn it is</div>
+                                    <div class = "defaultText"> > Alternates turns between each player every counter</div>
+                                    <div class = "defaultText"> > Automaticly check if a player has won Horizontally, Vertically or Diagonally.</div>
+                                    <div class = "defaultText"> > Displays "Red Won" or "Yellow Won" when the player wins</div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- MINE SWEEPER -->
+                        <div class = "sec-3-mine">
+                            <div class = "header"> MineSweeper<span class = "defaultText" style = "top: 0;">- Python</span></div>
+                            
+                            <div class = "defaultText">Source Code: <a href="https://github.com/TipuCS/MineSweeper/blob/main/main.py"><span class = "defaultText">GitHub</span></a></div>
+                            
+                            <div class = "sec-3-mine-box">
+                                <div class = "sec-3-video-box">
+                                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/40zJjyMgfu4" title="YouTube video player" frameborder="0"
+                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                                <div class = "sec-3-mine-box-textbox" style = "min-width: 400px;">
+                                    <div class = "header">Features Include:</div>
+                                    <div class = "defaultText"> > Clicking on a box will activate it</div>
+                                    <div class = "defaultText"> > Each box displays the number of bombs directly surround itself</div>
+                                    <div class = "defaultText"> > If a box has 0 bombs, the boxes around it will get automatically displayed</div>
+                                    <div class = "defaultText"> > Displays number of boxes left at the top</div>
+                                    <div class = "defaultText"> > Displays total number of bombs, in the map, at the top</div>
+                                    <div class = "defaultText"> > A Bomb is the color RED</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    <!-- </div> -->
+                </div>
+            </div>
+
+
+        </div>
+        <div id="sec-4">
+
+            <canvas id="canvas1"></canvas>
+
+        </div>
+
+
     </body>
-
+    
 </html>
- 
