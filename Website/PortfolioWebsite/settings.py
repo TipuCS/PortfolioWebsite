@@ -53,8 +53,8 @@ MIDDLEWARE = [
 ]
 
 # Found this online, redirects http to https TEST
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-# SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
 
 ROOT_URLCONF = 'PortfolioWebsite.urls'
 
