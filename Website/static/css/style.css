@@ -587,6 +587,7 @@ html{
 
     .sec-3-box-for-button{
         flex-direction:row;
+        min-width: 50px;
     }
     .sec-3-box-box{
         flex-direction:column;

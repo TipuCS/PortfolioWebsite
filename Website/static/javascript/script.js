@@ -86,10 +86,10 @@ function initalPause(initalTime, string, elementID, time){
 }
 
 
-initalPause(1500, text1, "sec-1-text-1", 100);
-initalPause(3400, text2, "sec-1-text-2", 100);
-initalPause(4400, text3, "sec-1-text-3", 100);
-initalPause(5500, text4, "sec-1-text-4", 100);
+initalPause(1500, text1, "sec-1-text-1", 50);
+initalPause(2700, text2, "sec-1-text-2", 50);
+initalPause(3200, text3, "sec-1-text-3", 50);
+initalPause(3800, text4, "sec-1-text-4", 50);
 
 let barsComplete = false;
 
