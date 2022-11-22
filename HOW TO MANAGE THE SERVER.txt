@@ -1,3 +1,6 @@
+CURRENT SITUATION, http://tipucs.co.uk redirects to https://tipucs.uk -=-=- THIS WORKS FINE
+BUT ADD THE WWW and the http doesn't redirect to https!
+
 HOW TO RUN THE SERVER: 
 1. Go to Google cloud VM instance	
 - Google Cloud -> Compute Engine -> VM instances

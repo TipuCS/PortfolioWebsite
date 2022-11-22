@@ -54,13 +54,13 @@ function scrollToPage(num){
         height = window.innerHeight;
     }
     if (num == 2){
-        height = window.innerHeight * 2;
+        height = window.innerHeight * 1.8;
     }
     if (num == 3){
-        height = window.innerHeight * 100;
+        height = window.innerHeight * 2.9;
     }
     document.documentElement.scrollTop = height; 
-    console.log(document.documentElement.scrollTop);
+    // console.log(document.documentElement.scrollTop);
 }
 
 switchDiv(0);
@@ -362,7 +362,7 @@ class AutoCar{
         }
         else{
             if (!this.done){
-                console.log("COMPLETED THE ANIMATION");
+                // console.log("COMPLETED THE ANIMATION");
                 this.timer.pause();
                 this.done = true;
             }
@@ -529,17 +529,17 @@ class Player{
 
             
             if (aDown){
-                console.log("turn it left");
+                // console.log("turn it left");
                 this.turnLeft();
                 // console.log("facing node id:", this.options[this.selectedOptionIndex][0].id);
             }
             if (dDown){
-                console.log("turn it right");
+                // console.log("turn it right");
                 this.turnRight();
                 // console.log(this.selectedOptionIndex);
             }
             if (wDown){
-                console.log("go forward");
+                // console.log("go forward");
                 this.goForward();
                 // console.log(this.selectedOptionIndex);
             }
@@ -563,7 +563,7 @@ class Player{
         if (this.replicaCar == null){
             this.replicaCar = new AutoCar(1, this.gameObj, this.travelledNodeList, "playerCar.png");
             addUpdateObjToCurrentScreen(this.replicaCar);
-            console.log("creation");
+            // console.log("creation");
         }
     }
 
@@ -572,7 +572,7 @@ class Player{
             let perfectNodeList = this.gameObj.returnAlgoNodeList();
             this.algoCar = new AutoCar(2, this.gameObj, perfectNodeList, "playerCar.png");
             addUpdateObjToCurrentScreen(this.algoCar);
-            console.log("creation");
+            // console.log("creation");
         }
     }
 
@@ -945,7 +945,7 @@ class Game{
             // console.log(this.perfectAutoCar);
             if ((this.replicaAutoCar.completedAnimation) && (this.perfectAutoCar.completedAnimation)){
                 this.stage = 4;
-                console.log("SET THE STAGE TO LEVEL 4");
+                // console.log("SET THE STAGE TO LEVEL 4");
             }
         }
 
@@ -954,10 +954,10 @@ class Game{
                 let replicaCarTime = Math.round(((this.replicaAutoCar.millisecondAccounted / 1000) / 2) * 10) / 10;
                 let perfectCarTime = Math.round(((this.perfectAutoCar.millisecondAccounted / 1000) / 2) * 10) / 10;
                 let difference =  Math.abs(Math.round((replicaCarTime - perfectCarTime) * 10) / 10);
-                console.log("difference:", replicaCarTime - perfectCarTime);
-                console.log("replica car: "+ replicaCarTime);
-                console.log("perfect car: "+ perfectCarTime);
-                console.log("difference:", difference);
+                // console.log("difference:", replicaCarTime - perfectCarTime);
+                // console.log("replica car: "+ replicaCarTime);
+                // console.log("perfect car: "+ perfectCarTime);
+                // console.log("difference:", difference);
                 popUp2InfoBox3.text = "Your Time: " + replicaCarTime + "s";
                 popUp2InfoBox4.text = "Star's Time: " + perfectCarTime + "s";
                 // if won
@@ -2764,7 +2764,7 @@ function swap(list, index1, index2){
 function createMapWithMinimumOptimalRoute(minimumNumberOfNodeInOptimalRoute, gameObj){
     gameObj.isMapComplete = false;
     gameObj.removeAllNode();
-    console.log("current game object ting:", gameObj.nodeList);
+    // console.log("current game object ting:", gameObj.nodeList);
     
 
     placeRandomNode(10, 5, 10, 40, 45, 1, 100, gameObj);
@@ -2809,11 +2809,11 @@ function createMapWithMinimumOptimalRoute(minimumNumberOfNodeInOptimalRoute, gam
             }
         }
         else{
-            console.log("end node has not been checked");
+            // console.log("end node has not been checked");
         }
         // console.log("counter:", counter);
     }
-    console.log("current game object ting:", gameObj.nodeList);
+    // console.log("current game object ting:", gameObj.nodeList);
     return;
 
 }
@@ -2868,7 +2868,7 @@ function retryMap(){
 }
 
 function resetAllScreens(){
-    console.log("resetted all screens");
+    // console.log("resetted all screens");
     // deactivate
     screenList.forEach((screen) => {
         screen.activeScreen = false;
@@ -2952,7 +2952,7 @@ function getFinalRoute(gameObj){
         else{
             return null;
         }
-        console.log("returning null from finalRoute");
+        // console.log("returning null from finalRoute");
         return null;
 
     }
@@ -3006,11 +3006,11 @@ function idToNode(id, gameObj){
 }
 
 function mapLogBtnFunc(gameObj){
-    console.log("-=-=-=- CLICKED MAP LOG BUTTON -=-=-=-");
+    // console.log("-=-=-=- CLICKED MAP LOG BUTTON -=-=-=-");
 
     // GET LAST NODE
 
-    console.log(gameObj.nodeList);
+    // console.log(gameObj.nodeList);
     let currentStr = "[";
     gameObj.nodeList.forEach((obj) => {
 
@@ -3039,11 +3039,11 @@ function mapLogBtnFunc(gameObj){
     });
     currentStr = currentStr.slice(0, currentStr.length - 1);
     currentStr += "]";
-    console.log(currentStr);
+    // console.log(currentStr);
 
-    console.log(gameScreen.drawBackgroundObjectList);
-    console.log(gameScreen.drawForegroundObjectList);
-    console.log(gameScreen.drawUIObjectList);
+    // console.log(gameScreen.drawBackgroundObjectList);
+    // console.log(gameScreen.drawForegroundObjectList);
+    // console.log(gameScreen.drawUIObjectList);
 
 }
 
@@ -3209,7 +3209,7 @@ function randomNodeBtnFunc(minRoute, gameObj){
     // REMOVE ALL NODES
     createMapWithMinimumOptimalRoute(minRoute, gameObj);
     gameObj.resetGame = true;
-    console.log("it was a success");
+    // console.log("it was a success");
 }
 
 function playEasyBtnFunc(gameObj){
@@ -3264,6 +3264,8 @@ function playCustomLevelBtnFunc(gameObj){
 
 
 // -=-=- FINDING OUT THE USER'S MOUSE POSITION -=-=- 
+let rect = canvas.getBoundingClientRect();
+
 var globalMouseClickX = 0;
 var globalMouseClickY = 0;
 var globalMouseHoverX = 0;
@@ -3276,10 +3278,13 @@ var holding = false;
 canvas.addEventListener("click", function(e){
     globalMouseClickX = e.x;
     globalMouseClickY = e.y;
+    // console.log([globalMouseClickX, globalMouseClickY]);
 })
 canvas.addEventListener("mousemove", function(e){
+    // elDistanceToTop = window.scrollY + rect.top - 2665.5;
     globalMouseHoverX = e.x;
     globalMouseHoverY = e.y;
+    // globalMouseHoverY = e.y;
 })
 
 document.body.onmousedown = function(){
@@ -3359,8 +3364,12 @@ function mouseClickPosInCanvas()
 
 function mouseHoverPosInCanvas()
 {
+    // console.log(window.innerWidth);
+    // console.log(window.innerHeight);
+    rect = canvas.getBoundingClientRect();
     canvasX = globalMouseHoverX - (window.innerWidth / 2) + (CANVAS_WIDTH / 2);
-    canvasY = globalMouseHoverY - (window.innerHeight / 2) + (CANVAS_HEIGHT / 2);
+    canvasY = globalMouseHoverY - (rect.top)
+    
     return [canvasX, canvasY];
 
 }
@@ -3512,11 +3521,16 @@ popUp2.buttonBoxObj.push(popUp2Button2);
 //                                                      MAIN PROGRAM LOOP
 // ---------------------------------------------------------------------------------------------------------------------------------
 
+
 let backgroundImage = drawPngOnCurrentScreen("mainMenuBackground2.png", (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 2), CANVAS_WIDTH, CANVAS_HEIGHT, 0, "background");
 
 // let buttonImage = drawPngOnCurrentScreen("button.png", 200, 150, 200, 100, 0, "background");
-
 function mainLoop(){
+    
+    // let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    // console.log(getPosition(rect));
+    
+    // console.log(canvas.height);
     
     // console.log(tempTimer.second + ": " + tempTimer.millisecond);
     mouseClickPos = mouseClickPosInCanvas();
@@ -3540,13 +3554,22 @@ function mainLoop(){
         }
     });
 
+    // rect.top = 194.5
+
     if (click){
-        console.log(screenList);
-        console.log(gameObj);
+        // console.log(startPlayMenuBtn.x);
+        // console.log(startPlayMenuBtn.y);
+        // console.log(startPlayMenuBtn.width);
+        // console.log(startPlayMenuBtn.height);
+        // console.log("window.scroollY:", window.scrollY);
+        // rect = canvas.getBoundingClientRect();
+        // console.log("rect top:", rect.top);
+    // var elDistanceToTop = window.scrollY + rect.top - 2665.5;
+    // console.log("distance from top:", elDistanceToTop);
     }
 
     if (aDown){
-        console.log("a pressed");
+        // console.log("a pressed");
     }
 
 
