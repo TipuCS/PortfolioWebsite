@@ -1,20 +1,22 @@
-CURRENT SITUATION, http://tipucs.co.uk redirects to https://tipucs.uk -=-=- THIS WORKS FINE
-BUT ADD THE WWW and the http doesn't redirect to https!
-
 HOW TO RUN THE SERVER: 
 1. Go to Google cloud VM instance	
 - Google Cloud -> Compute Engine -> VM instances
 2. Go to SSH console for "portfoliowebsite"
 3. Run the manage.py file:
+- Use the command: "cd PortfolioWebsite; cd Website; nohup sudo python3 manage.py runserver 0.0.0.0:80 &"
+Explanation:
+	sets the http to move to https
+	Also, don't need to cd (move into) the PortfolioWebsite and then Website after first command to run the second nohup command
+	0.0.0.0:80 means http (80 is http)
 - Use the command: "cd PortfolioWebsite; cd Website; nohup sudo python3 manage.py runsslserver 0.0.0.0:443 &"
 Explanation:
-cd: moves into a folder
-nohup: Runs the command "sudo python3 manage.py runsslserver 0.0.0.0:443" even when the terminal is closed
-sudo: Forces a command to run, regardless of permissions
-python3: package used to run everything
-manage.py: The main file running the html/css/javascript files
-runsslserver: runs the server using "https"
-0.0.0.0:443 : the 443 means https (80 would mean http)
+	cd: moves into a folder
+	nohup: Runs the command "sudo python3 manage.py runsslserver 0.0.0.0:443" even when the terminal is closed
+	sudo: Forces a command to run, regardless of permissions
+	python3: package used to run everything
+	manage.py: The main file running the html/css/javascript files
+	runsslserver: runs the server using "https"
+	0.0.0.0:443 : the 443 means https (80 would mean http)
 
 HOW TO UPDATE WEBSITE:
 1. Change the javascript Image class source

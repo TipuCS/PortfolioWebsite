@@ -327,6 +327,8 @@ class AutoCar{
         this.drewCar = false;
         this.layerToDraw = "foreground";
         this.angle;
+
+        this.oppositionAutoCar = null;
         
         this.currentRouteId = 0;
         this.percentageComplete = 0;
@@ -369,7 +371,29 @@ class AutoCar{
         }
     }
 
+    IsCarOnSameRoadAsOpposition(){
+        console.log("doing");
+        if (this.id == 1){
+            console.log("my car routeIDList:", this.routeIdList);
+            console.log("opposition car routeIDList:", this.oppositionAutoCar.routeIdList);
+        }
+
+        let myCurrentNode = this.routeIdList[this.currentRouteId];
+        let myNextNode = this.routeIdList[this.currentRouteId + 1];
+        let oppositionCurrentNode = this.oppositionAutoCar.routeIdList[this.oppositionAutoCar.currentRouteId];
+        let oppositionNextNode = this.oppositionAutoCar.routeIdList[this.oppositionAutoCar.currentRouteId + 1];
+        if ((myCurrentNode == oppositionCurrentNode) && (myNextNode == oppositionNextNode)){
+            console.log("on same road");
+            return true
+            
+        }else{
+            console.log("NOT on same road");
+            return false
+        }
+    }
+
     draw(){
+
         // console.log("drawing");
         if (!this.drewCar){
             // console.log("drew car was false, updating car");
@@ -380,10 +404,36 @@ class AutoCar{
             let secondNodeX = gridCordToPixelCord(secondNode.x);
             let secondNodeY = gridCordToPixelCord(secondNode.y);
             this.angle = findBearingBetweenPoints([firstNodeX, firstNodeY],[secondNodeX, secondNodeY]);
+            let bearingAngleDegree = this.angle;
             this.angle -= 90;
+            // console.log(this.angle);
             if (this.angle < 0){this.angle += 360;}
             this.deleteCarPng(this.carImage);
-            this.carImage =  drawPngOnCurrentScreen(this.carPng, this.x, this.y, this.width, this.height, this.angle, this.layerToDraw);
+
+            let distanceMoveToSide = 0;
+            let xOffset = 0;
+            let yOffset = 0;
+            if (this.IsCarOnSameRoadAsOpposition()){
+
+                if (this.id == 1){
+                    distanceMoveToSide = 7;
+                    // console.log(changeDistanceAngle);
+                    let bearingAngleRad = (bearingAngleDegree * Math.PI) / 180
+                    xOffset = distanceMoveToSide * Math.sin( (Math.PI / 2) - bearingAngleRad)
+                    yOffset = distanceMoveToSide * Math.cos( (Math.PI / 2) - bearingAngleRad)
+                }
+                if (this.id == 2){
+                    distanceMoveToSide = -7;
+                    // console.log(changeDistanceAngle);
+                    let bearingAngleRad = (bearingAngleDegree * Math.PI) / 180
+                    xOffset = distanceMoveToSide * Math.sin( (Math.PI / 2) - bearingAngleRad)
+                    yOffset = distanceMoveToSide * Math.cos( (Math.PI / 2) - bearingAngleRad)
+                }
+            }
+
+
+
+            this.carImage =  drawPngOnCurrentScreen(this.carPng, this.x + xOffset, this.y + yOffset, this.width, this.height, this.angle, this.layerToDraw);
             this.drewCar = true;
         }
     }
@@ -570,7 +620,7 @@ class Player{
     createPerfectAutoCar(){
         if (this.algoCar == null){
             let perfectNodeList = this.gameObj.returnAlgoNodeList();
-            this.algoCar = new AutoCar(2, this.gameObj, perfectNodeList, "playerCar.png");
+            this.algoCar = new AutoCar(2, this.gameObj, perfectNodeList, "starCar.png");
             addUpdateObjToCurrentScreen(this.algoCar);
             // console.log("creation");
         }
@@ -941,6 +991,9 @@ class Game{
             this.playerCar.createPerfectAutoCar();
             this.replicaAutoCar = this.playerCar.replicaCar;
             this.perfectAutoCar = this.playerCar.algoCar;
+
+            this.replicaAutoCar.oppositionAutoCar = this.perfectAutoCar;
+            this.perfectAutoCar.oppositionAutoCar = this.replicaAutoCar;
             // console.log(this.replicaAutoCar);
             // console.log(this.perfectAutoCar);
             if ((this.replicaAutoCar.completedAnimation) && (this.perfectAutoCar.completedAnimation)){
