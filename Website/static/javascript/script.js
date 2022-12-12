@@ -372,7 +372,6 @@ class AutoCar{
     }
 
     IsCarOnSameRoadAsOpposition(){
-        console.log("doing");
         if (this.id == 1){
             console.log("my car routeIDList:", this.routeIdList);
             console.log("opposition car routeIDList:", this.oppositionAutoCar.routeIdList);
@@ -383,11 +382,9 @@ class AutoCar{
         let oppositionCurrentNode = this.oppositionAutoCar.routeIdList[this.oppositionAutoCar.currentRouteId];
         let oppositionNextNode = this.oppositionAutoCar.routeIdList[this.oppositionAutoCar.currentRouteId + 1];
         if ((myCurrentNode == oppositionCurrentNode) && (myNextNode == oppositionNextNode)){
-            console.log("on same road");
             return true
             
         }else{
-            console.log("NOT on same road");
             return false
         }
     }
