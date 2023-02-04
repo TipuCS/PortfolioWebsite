@@ -3513,7 +3513,7 @@ let backCustomLevelBtn = new Button(17, pToP(1), pToP(94), pToP(12), pToP(5), GR
 
 // -=-=-=-=-=-=-=-=- EASY / MEDIUM / HARD SCREEN -=-=-=-=-=-=-=-=-
 
-let GetToFinishLine = new InfoBox(pToP(5), pToP(5), pToP(90), pToP(10), YELLOW, "Get to the finish line with the most efficient route!", 30, 0);
+let GetToFinishLine = new InfoBox(pToP(5), pToP(5), pToP(90), pToP(10), YELLOW, "Get to the finish line. Use 'A' and 'D' To Turn. Use 'W To move forward. ", 20, 0);
 
 // -=-=-=-=-=-=-=-=- BUILDING POPUPS -=-=-=-=-=-=-=-=-
 

@@ -32,6 +32,8 @@ ALLOWED_HOSTS = ["tipucs.co.uk", "www.tipucs.co.uk", "127.0.0.1", "35.242.188.66
 
 # Application definition
 
+# REMOVED SSLSERVER FROM INSTALLED APPS
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "sslserver",
+    # "sslserver",
 ]
 
 MIDDLEWARE = [
