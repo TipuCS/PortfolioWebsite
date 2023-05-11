@@ -1,6 +1,17 @@
+
+cd PortfolioWebsite; cd Website; nohup sudo python3 manage.py runserver 0.0.0.0:80 & cd; cd PortfolioWebsite; cd Website; nohup sudo python3 manage.py runsslserver 0.0.0.0:443 &
+
+cd /home/tipu2004/PortfolioWebsite/Website nohup sudo python3 manage.py runserver 0.0.0.0:80 & cd /home/tipu2004/PortfolioWebsite/Website; nohup sudo python3 manage.py runsslserver 0.0.0.0:443 &
+
+Aight theres a lot of explanations to do.
+Essentially, the reason the VM couldn't run the startup script was many reasons.
+1. The VM didn't have access to actually run commands because it had exprired key. (fixed by https://cloud.google.com/compute/docs/connect/create-ssh-keys)
+2. The VM startup script was incorrect. Wrote it correctly now, "cd /home/tipu2004/PortfolioWebsite/Website nohup sudo python3 manage.py runserver 0.0.0.0:80 & cd /home/tipu2004/PortfolioWebsite/Website; nohup sudo python3 manage.py runsslserver 0.0.0.0:443 &
+" this line should be in startup script (obviously ignore the quotation marks)
+
 HOW TO RUN THE SERVER: 
 1. Go to Google cloud VM instance	
-- Google Cloud -> Compute Engine -> VM instances
+- Google Cloud -> Compute Engine -> VM instances 	
 2. Go to SSH console for "portfoliowebsite"
 3. Run the manage.py file:
 - Use the command: "cd PortfolioWebsite; cd Website; nohup sudo python3 manage.py runserver 0.0.0.0:80 &"
@@ -8,6 +19,9 @@ Explanation:
 	sets the http to move to https
 	Also, don't need to cd (move into) the PortfolioWebsite and then Website after first command to run the second nohup command
 	0.0.0.0:80 means http (80 is http)
+
+- Exit the current file with "cd"
+
 - Use the command: "cd PortfolioWebsite; cd Website; nohup sudo python3 manage.py runsslserver 0.0.0.0:443 &"
 Explanation:
 	cd: moves into a folder
@@ -65,8 +79,10 @@ Got certificate from zeroSSL (website)
 - move the certificate.crt to "/usr/local/lib/python3.9/dist-packages/sslserver/certs/" using command: "sudo mv certificate.crt /usr/local/lib/python3.9/dist-packages/sslserver/certs/"
 - move the private.key to "/usr/local/lib/python3.9/dist-packages/sslserver/certs/" using command: "sudo mv private.key /usr/local/lib/python3.9/dist-packages/sslserver/certs/"
 9. Change the name of the certificates
+- go to the file location. First exit out of all files with command: "cd"
+- go to the file location with command: "cd /usr/local/lib/python3.9/dist-packages/sslserver/certs/"
 - change "certificate.crt" to "development.crt" using command: "sudo mv certificate.crt development.crt"
-- change "private.key" to "development.key" using  command "sudo mv certificate.key development.key"
+- change "private.key" to "development.key" using  command "sudo mv private.key development.key"
 
 
 
